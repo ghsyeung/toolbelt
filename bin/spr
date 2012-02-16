@@ -1,0 +1,42 @@
+#!/bin/bash
+
+TAGFILE=~/.prtags
+tag=""
+
+echo $0 $1
+
+
+function usage() {
+  echo "Usage: spr [tag]"
+}
+
+if [ "$#" -gt 1 ]; then
+  # print out help
+  usage;
+  exit;
+elif [ -z "$1" ]; then
+  # no tag provided
+  tag="__DEFAULT_"
+else 
+  # regular case
+  echo "tag provided"
+  tag="$1"
+fi
+
+
+pattern="${tag}_"
+# see if tag is in file
+if [ -f "$TAGFILE" ]; then
+  info=`grep $pattern $TAGFILE`
+  
+  if [ -n "$info" ]; then
+    # tag exists, remove it
+    temp=`sed -e /"$pattern"/d $TAGFILE`
+    echo $temp > $TAGFILE
+  fi
+fi
+# file or tag doesn't exists, append to file
+pwd=`pwd`
+info="$pattern : $pwd"
+
+echo $info >> "$TAGFILE"

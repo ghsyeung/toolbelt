@@ -1,0 +1,41 @@
+#!/bin/bash
+
+# to use gpr properly, 
+# source this file into .bashrc or .bash_profile
+
+function gpr_usage() {
+  echo "Usage: gpr [tag]"
+}
+
+function gpr() {
+  TAGFILE=~/.prtags
+  tag=""
+
+  echo $0 $1
+
+  if [ "$#" -gt 1 ]; then
+    # print out help
+    gpr_usage;
+    exit;
+  elif [ -z "$1" ]; then
+    # no tag provided
+    tag="__DEFAULT_"
+  else 
+    # regular case
+    echo "tag provided"
+    tag="$1"
+  fi
+
+  pattern="${tag}_"
+  # see if tag is in file
+  if [ -f "$TAGFILE" ]; then
+    info=`grep $pattern $TAGFILE`
+    
+    if [ -n "$info" ]; then
+      # tag exists, extract the path
+      path=`expr "$info" : ".*_ : \(.*\)"`
+      echo $path
+      cd $path
+    fi
+  fi
+}
