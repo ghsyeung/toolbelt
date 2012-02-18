@@ -1,5 +1,3 @@
-#!/bin/bash
-
 # to use gpr properly, 
 # source this file into .bashrc or .bash_profile
 
@@ -33,9 +31,11 @@ function gpr() {
     
     if [ -n "$info" ]; then
       # tag exists, extract the path
-      path=`expr "$info" : ".*_ : \(.*\)"`
-      echo $path
-      cd $path
+      pathh=-`expr "$info" : ".*_ : \(.*\)"`
+
+      # avoid ZSH named directory
+      # https://github.com/zimbatm/direnv/commit/d7778d14384a7c459351cc212b56dacd8b7f0470
+      cd "${pathh#-}"
     fi
   fi
 }
